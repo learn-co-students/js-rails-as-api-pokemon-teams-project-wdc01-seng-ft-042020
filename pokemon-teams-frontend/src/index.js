@@ -19,16 +19,7 @@ function fetchTrainers() {
         })
 };
 
-function fetchTrainers() {
-    console.log("we here")
-    fetch(TRAINERS_URL)
-        .then(function(response) { return response.json() })
-        .then(trainersArr => { trainersArr.forEach(trainer => renderTrainer(trainer)) })
-        .catch(function(errors) {
-            alert("turn server on!");
-            console.log(error.message)
-        })
-};
+
 
 
 function renderTrainer(trainer) {
@@ -36,6 +27,7 @@ function renderTrainer(trainer) {
     let main = document.querySelector("main");
     let div = document.createElement("div");
     let p = document.createElement("p");
+    let ul = document.createElement("ul")
     p.innerText = trainer.name;
     div.className = "card";
     div.dataset.id = trainer.id;
