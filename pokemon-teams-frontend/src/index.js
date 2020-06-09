@@ -16,32 +16,79 @@ function renderAllTrainers(){
     .then( trainers => {
         trainers.forEach( renderOneTrainer )
     })
+}
 
+function handleAddPokemon(e) {
+    // if team size < 6, you may proceed
+    //debugger
+    //console.log(e.target.nextS)
+
+    if (e.target.nextSibling.children.length < 6) {
+        let trId = e.target.dataset.trainerId
+        fetch(POKEMONS_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json",
+                Accept: "application/json"
+            },
+            //body: JSON.stringify({trainerId: trId})
+            body: JSON.stringify({pokemon: {trainerId:trId}})
+            // {pokemon: {trainerId: trId}}
+        })
+        .then(resp => resp.json())
+        .then(pkmn => {renderOnePokemon(pkmn, e.target.nextSibling)})
+
+    }
+
+
+    //e.target.dataset.trainerId is the trainerID we assoc with the created pkmn
+
+    // fetch(POKEMONS_URL, {
+    // method: "POST"
+    // headers: {}
+    // body:)
+}
+
+function handleReleasePokemon(e) {
 
 }
+
+function renderOnePokemon(pkmn, list) {
+    
+    let listElement = document.createElement("li")
+    let releaseBtn = document.createElement("button")
+    releaseBtn.className = "release"
+    releaseBtn.dataset.pokemonId = pkmn.id
+    releaseBtn.innerText = "Release"
+    releaseBtn.addEventListener("click", handleReleasePokemon)
+    listElement.innerText = `${pkmn.nickname} (${pkmn.species})`
+    listElement.appendChild(releaseBtn)
+    list.appendChild(listElement)
+}
+
 
 
 function renderOneTrainer(trainer) {
 
     const main = document.querySelector('main')
-
     const trainerCard = document.createElement('div')
     trainerCard.className = `card`
     trainerCard.dataset.trainerId = trainer.id
 
+    let name = document.createElement('p')
+    name.innerText = trainer.name
+
+    let addBtn = document.createElement('button')
+    addBtn.dataset.trainerId = trainer.id
+    addBtn.innerText = "Add Pokemon"
+    addBtn.addEventListener("click", handleAddPokemon)
+
+    let list = document.createElement('ul')
+
+    trainer.pokemons.forEach( (pkmn) => renderOnePokemon(pkmn, list))
+
+
+
+    trainerCard.append(name, addBtn, list)
     main.appendChild(trainerCard);
-
-
-// <div class="card" data-id="1"><p>Prince</p>
-//   <button data-trainer-id="1">Add Pokemon</button>
-//   <ul>
-//     <li>Jacey (Kakuna) <button class="release" data-pokemon-id="140">Release</button></li>
-//     <li>Zachariah (Ditto) <button class="release" data-pokemon-id="141">Release</button></li>
-//     <li>Mittie (Farfetch'd) <button class="release" data-pokemon-id="149">Release</button></li>
-//     <li>Rosetta (Eevee) <button class="release" data-pokemon-id="150">Release</button></li>
-//     <li>Rod (Beedrill) <button class="release" data-pokemon-id="151">Release</button></li>
-//   </ul>
-// </div>
-
-    console.log(trainer.name)
 }
