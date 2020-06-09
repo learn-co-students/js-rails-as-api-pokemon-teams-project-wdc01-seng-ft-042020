@@ -27,7 +27,7 @@ function renderTrainer(trainer) {
     let main = document.querySelector("main");
     let div = document.createElement("div");
     let p = document.createElement("p");
-    let ul = document.createElement("ul")
+    let ul = document.createElement("ul");
     p.innerText = trainer.name;
     div.className = "card";
     div.dataset.id = trainer.id;
