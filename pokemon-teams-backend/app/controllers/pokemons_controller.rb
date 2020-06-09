@@ -12,8 +12,9 @@ class PokemonsController < ApplicationController
 
     def destroy
         # byebug
+        poke = Pokemon.find(params[:id)
         Pokemon.destroy(params[:id])
-        render json: {message: "Successfully Deleted"}
+        render json: {pokemon: poke, message: "Successfully Deleted"}
     end
 
     private
