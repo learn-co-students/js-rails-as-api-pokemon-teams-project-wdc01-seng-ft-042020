@@ -62,10 +62,14 @@ function renderTrainer(trainer) {
 
 
 function addPokemon(event, trainer) {
+    // debugger
+    if (trainer.pokemons.length < 6) {
+    
     let newPoke = {
         trainer_id: trainer.id
 
     }
+
     fetch(POKEMONS_URL, {
             method: "POST",
             headers: {
@@ -77,14 +81,25 @@ function addPokemon(event, trainer) {
         })
         .then(resp => resp.json())
         .then(pokemon => renderPokemon(event, pokemon, trainer))
+        // debugger
+} else {
+    alert("full party")
 }
-
+}
 function renderPokemon(event, pokemon, trainer) {
+    // debugger
     let ul = event.target.parentElement.querySelector("ul")
     let li = document.createElement("li");
     li.innerText = `${pokemon.species} (${pokemon.nickname})`;
-    li.append(button1);
-    ul.append(li);
+    let button1 = document.createElement("button");
+        button1.className = "release";
+        button1.dataset.pokemonId = pokemon.id;
+        button1.innerText = "Release";
+        li.append(button1);
+        ul.append(li);
+        button1.addEventListener("click", function(event) {
+            removePokemon(event, pokemon)
+        })
 }
 
 
