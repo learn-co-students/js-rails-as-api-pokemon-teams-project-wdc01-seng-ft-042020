@@ -23,23 +23,77 @@ function fetchTrainers() {
 
 
 function renderTrainer(trainer) {
-    console.log(trainer)
+
     let main = document.querySelector("main");
     let div = document.createElement("div");
     let p = document.createElement("p");
     let button = document.createElement("button");
     let ul = document.createElement("ul");
-    let li = document.createElement("li");
 
 
-    li.innerText = trainer.pokemons;
+
+    trainer.pokemons.forEach(pokemon => {
+        let li = document.createElement("li");
+        li.innerText = `${pokemon.species} (${pokemon.nickname})`;
+        let button1 = document.createElement("button");
+        button1.className = "release";
+        button1.dataset.pokemonId = pokemon.id;
+        button1.innerText = "Release";
+        li.append(button1);
+        ul.append(li);
+        button1.addEventListener("click", function(event) {
+            removePokemon(event, pokemon)
+        })
+    });
+
     p.innerText = trainer.name;
     div.className = "card";
     div.dataset.id = trainer.id;
     button.dataset.trainerId = trainer.id;
     button.innerText = "Add Pokemon";
-    ul.append(li)
+    button.addEventListener("click", function(event) {
+        addPokemon(event, trainer)
+    })
+
     div.append(p, button, ul);
     main.append(div);
 
+};
+
+
+function addPokemon(event, trainer) {
+    let newPoke = {
+        trainer_id: trainer.id
+
+    }
+    fetch(POKEMONS_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+
+            body: JSON.stringify(newPoke)
+        })
+        .then(resp => resp.json())
+        .then(pokemon => renderPokemon(event, pokemon, trainer))
+}
+
+function renderPokemon(event, pokemon, trainer) {
+    let ul = event.target.parentElement.querySelector("ul")
+    let li = document.createElement("li");
+    li.innerText = `${pokemon.species} (${pokemon.nickname})`;
+    li.append(button1);
+    ul.append(li);
+}
+
+
+function removePokemon(event, pokemon) {
+
+    let target = event.target.parentElement
+    let pokeId = event.target.dataset.pokemonId
+    fetch(POKEMONS_URL + `/${pokeId}`, {
+        method: "DELETE"
+    })
+    target.remove()
 }
