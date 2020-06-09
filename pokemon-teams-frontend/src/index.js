@@ -27,14 +27,19 @@ function renderTrainer(trainer) {
     let main = document.querySelector("main");
     let div = document.createElement("div");
     let p = document.createElement("p");
+    let button = document.createElement("button");
     let ul = document.createElement("ul");
+    let li = document.createElement("li");
+
+
+    li.innerText = trainer.pokemons;
     p.innerText = trainer.name;
     div.className = "card";
     div.dataset.id = trainer.id;
-    let button = document.createElement("button");
-    button.dataset.id = trainer.id;
+    button.dataset.trainerId = trainer.id;
     button.innerText = "Add Pokemon";
-    div.append(p, button);
+    ul.append(li)
+    div.append(p, button, ul);
     main.append(div);
 
 }
