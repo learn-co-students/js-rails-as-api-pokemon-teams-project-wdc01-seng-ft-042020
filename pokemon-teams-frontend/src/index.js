@@ -51,6 +51,26 @@ function handleAddPokemon(e) {
 
 function handleReleasePokemon(e) {
 
+    let pokeId = e.target.dataset.pokemonId;
+    
+    fetch(`${POKEMONS_URL}/${pokeId}`, {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept" : "application/json"
+        }
+        // body: JSON.stringify({
+        //     pokemon: {id: pokeId}
+        // })
+    })
+    .then(res => res.json() )
+    .then( data => {
+        
+        e.target.parentNode.remove()
+
+    })
+
+
 }
 
 function renderOnePokemon(pkmn, list) {

@@ -10,6 +10,12 @@ class PokemonsController < ApplicationController
         render json: pokemon.to_json(:except => [:created_at, :updated_at])
     end
 
+    def destroy
+        # byebug
+        Pokemon.destroy(params[:id])
+        render json: {message: "Successfully Deleted"}
+    end
+
     private
 
     def pokemon_params
