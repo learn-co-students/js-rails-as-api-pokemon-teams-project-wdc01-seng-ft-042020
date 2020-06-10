@@ -12,14 +12,21 @@ function fetchTrainers() {
     console.log("we here")
     fetch(TRAINERS_URL)
         .then(function(response) { return response.json() })
-        .then(trainersArr => { trainersArr.forEach(trainer => renderTrainer(trainer)) })
+        .then(function(trainersArr) {
+            eachTrainer(trainersArr);
+        })
         .catch(function(errors) {
             alert("turn server on!");
             console.log(error.message)
         })
 };
 
+function eachTrainer(array) {
+    array.forEach(function(trainer) {
+        renderTrainer(trainer)
 
+    })
+}
 
 
 function renderTrainer(trainer) {
@@ -52,7 +59,7 @@ function renderTrainer(trainer) {
     button.dataset.trainerId = trainer.id;
     button.innerText = "Add Pokemon";
     button.addEventListener("click", function(event) {
-        addPokemon(event, trainer)
+        addPokemon(event)
     })
 
     div.append(p, button, ul);
@@ -61,53 +68,58 @@ function renderTrainer(trainer) {
 };
 
 
-function addPokemon(event, trainer) {
-    // debugger
-    if (trainer.pokemons.length < 6) {
-    
-    let newPoke = {
-        trainer_id: trainer.id
+function addPokemon(event) {
+    let trainer_id = event.target.dataset.trainerId
+    if (document.querySelector(`[data-id ="${trainer_id}"]`).children[2].childElementCount < 6) {
 
+        let newPoke = {
+            trainer_id: trainer_id
+        }
+
+        fetch(POKEMONS_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json"
+                },
+
+                body: JSON.stringify(newPoke)
+            })
+            .then(resp => resp.json())
+            .then(function(pokemon) {
+                renderPokemon(event, pokemon);
+            })
+            // debugger
+    } else {
+        alert("full party")
     }
+};
 
-    fetch(POKEMONS_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json"
-            },
-
-            body: JSON.stringify(newPoke)
-        })
-        .then(resp => resp.json())
-        .then(pokemon => renderPokemon(event, pokemon, trainer))
-        // debugger
-} else {
-    alert("full party")
-}
-}
-function renderPokemon(event, pokemon, trainer) {
+function renderPokemon(event, pokemon) {
     // debugger
     let ul = event.target.parentElement.querySelector("ul")
     let li = document.createElement("li");
-    li.innerText = `${pokemon.species} (${pokemon.nickname})`;
+    li.innerText = `${pokemon.species } (${pokemon.nickname })`;
     let button1 = document.createElement("button");
-        button1.className = "release";
-        button1.dataset.pokemonId = pokemon.id;
-        button1.innerText = "Release";
-        li.append(button1);
-        ul.append(li);
-        button1.addEventListener("click", function(event) {
-            removePokemon(event, pokemon)
-        })
-}
+    button1.className = "release";
+    button1.dataset.pokemonId = pokemon.id;
+    button1.innerText = "Release";
+    li.append(button1);
+    ul.append(li);
+    button1.addEventListener("click", function(event) {
+        removePokemon(event, pokemon)
+    })
+};
+
+
 
 
 function removePokemon(event, pokemon) {
 
     let target = event.target.parentElement
     let pokeId = event.target.dataset.pokemonId
-    fetch(POKEMONS_URL + `/${pokeId}`, {
+    fetch(POKEMONS_URL + ` / $ { pokeId }
+            `, {
         method: "DELETE"
     })
     target.remove()
