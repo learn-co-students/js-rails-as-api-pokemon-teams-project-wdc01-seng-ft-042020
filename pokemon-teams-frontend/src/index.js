@@ -118,8 +118,7 @@ function removePokemon(event, pokemon) {
 
     let target = event.target.parentElement
     let pokeId = event.target.dataset.pokemonId
-    fetch(POKEMONS_URL + ` / $ { pokeId }
-            `, {
+    fetch(POKEMONS_URL + `/${ pokeId }`, {
         method: "DELETE"
     })
     target.remove()
